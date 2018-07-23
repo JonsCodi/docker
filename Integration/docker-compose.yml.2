@@ -1,0 +1,36 @@
+version: '3'
+services:
+   jenkins-data:
+      container_name: jenkins-data
+      build: 
+         context: ./Jenkins
+         dockerfile: Dockerfile-data
+
+   jenkins:
+       container_name: jenkins
+       hostname: jenkins
+       build: 
+         context: ./Jenkins
+         dockerfile: Dockerfile
+       ports:
+         - 8081:8080
+         - 50000:50000
+       volumes:
+         - jenkins-data
+
+   gitlab:
+       image: gitlab/gitlab-ce
+       container_name: gitlab
+       hostname: gitlab
+       restart: always
+       network_mode: bridge
+       links:
+         - "ambassador:jenkins"
+       ports:
+         - "443:443"
+         - "8050:80"
+         - "2224:22"
+       volumes:
+         - ~/Projects/gitlab/config:/etc/gitlab
+         - ~/Projects/gitlab/logs:/var/log/gitlab
+         - ~/Projects/gitlab/data:/var/opt/gitlab

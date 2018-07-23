@@ -1,0 +1,29 @@
+version: '3'
+services:
+   jenkins-data:
+      container_name: jenkins-data
+      build: 
+         context: ./Jenkins
+         dockerfile: Dockerfile-data
+
+   jenkins:
+       container_name: jenkins
+       hostname: jenkins
+       build: 
+         context: ./Jenkins
+         dockerfile: Dockerfile
+       ports:
+         - 8081:8080
+         - 50000:50000
+       volumes:
+         - jenkins-data
+   bitbucket:
+       image: atlassian/bitbucket-server:4.14
+       container_name: bitbucket
+       hostname: bitbucket
+       restart: always
+       ports:
+         - 7990:7990
+         - 7999:7999
+       volumes:
+         - /var/atlassian/application-data/bitbucket

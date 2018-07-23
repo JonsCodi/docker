@@ -1,0 +1,30 @@
+version: '3'
+services:
+   bamboo: 
+      image: hwuethrich/bamboo-server
+      container_name: bamboo
+      hostname: bamboo
+      restart: always
+      ports: 
+         - 8085:8085
+         - 54663:54663
+      volumes: 
+         - /data/bamboo-server:/home/bamboo
+   bitbucket:
+       image: atlassian/bitbucket-server:4.14
+       container_name: bitbucket
+       hostname: bitbucket
+       restart: always
+       ports:
+         - 7990:7990
+         - 7999:7999
+       volumes:
+         - /data/bitbucket-server:/home/bitbucket
+   tomcat:
+       image: tomcat:8.0
+       container_name: tomcat
+       hostname: tomcat
+       restart: always
+       ports: 
+          - 8080:8080
+         
